@@ -14,7 +14,8 @@ local options = {
 
 local SPACECOWBOY = audio.loadSound( "Joker.mp3" )
 local PEW = audio.loadSound("Pew.mp3")
-local HE_DEAD = audio.loadSound("Pacman.mp3")
+local DEAD = audio.loadSound("Pacman.mp3")
+local BOING = audio.loadSound("Bounce.mp3")
 
 local SMBandChannel = audio.play(SPACECOWBOY, {channel=1, loops=-1, fadein=2000})
 
@@ -216,11 +217,11 @@ end
 --right side of the screen the monster will fire off a little blue bolt
 function touched( event )
     if(event.phase == "began") then
-    	local PewChannel = audio.play(PEW)
-
-        if(event.x < display.contentWidth / 2) then
+    	if(event.x < display.contentWidth / 2) then
+    		boingChannel = audio.play(BOING)
             hero.y = 0
         else
+        	pewChannel = audio.play(PEW)
             for a=1, blasts.numChildren, 1 do
                 if(blasts[a].isAlive == false) then
                     blasts[a].isAlive = true
@@ -279,7 +280,7 @@ end
 function checkCollisions()
         --boolean variable so we know if we were on the ground in the last frame
 	wasOnGround = onGround
-
+	flag = true
 	for a = 1, blocks.numChildren, 1 do
 		if(collisionRect.y - 10> blocks[a].y - 170 and blocks[a].x - 40 < collisionRect.x and blocks[a].x + 40 > collisionRect.x) then
 			--stop the hero
@@ -293,11 +294,9 @@ function checkCollisions()
 			if(((  ((hero.y-aliens[a].y))<70) and ((hero.y - aliens[a].y) > -70)) and (aliens[a].x - 40 < collisionRect.x and aliens[a].x + 40 > collisionRect.x)) then
 				--stop the hero
 				speed = 0
-				flag = true
 				if (flag) then
-					local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500,})
+					local pacChannel = audio.play(DEAD, {channel=2, loops=0, fadein=500,})
 				end
-				flag = false
 			end
 		end
 	end
@@ -309,11 +308,9 @@ function checkCollisions()
 			if(((  ((hero.y-meteors[a].y))<70) and ((hero.y - meteors[a].y) > -70)) and (meteors[a].x - 40 < collisionRect.x and meteors[a].x + 40 > collisionRect.x)) then
 				--stop the hero
 				speed = 0
-				flag = true
 				if (flag) then
-					local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500})
+					local pacChannel = audio.play(DEAD, {channel=2, loops=0, fadein=500})
 				end
-				flag = false
 			end
 		end
 	end
@@ -328,6 +325,7 @@ function checkCollisions()
 		end
 	end
 end
+flag = false
 
 --update the meteors if they are alive
 function updatemeteors()
@@ -387,11 +385,10 @@ function updateBlasts()
 					blasts[a].isAlive = false
 					aliens[b].x = 900
 					aliens[b].y = 500
-<<<<<<< HEAD
+
 					aliens[b].isAlive = false
-=======
+
 					aliens[b].isAlive = true
->>>>>>> f08d8bbf6f79aa3ca16de8700a29057380aaac5f
                 end
             end
         end
