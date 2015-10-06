@@ -1,4 +1,4 @@
-#Vandy Scroller
+#Space Cowboy
 
 Vandy Hacks II - October 2-4, 2015
 
